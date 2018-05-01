@@ -86,7 +86,7 @@ Define this in your `pom.xml` in order to use it:
 
 ### Does it work with Java < 8?
 
-Nope. You will need Java 8.
+Yes :) , Java 1.6.
 
 ### Does it work with PDFBox 1.8.9?
 

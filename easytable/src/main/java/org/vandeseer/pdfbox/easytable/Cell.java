@@ -1,7 +1,6 @@
 package org.vandeseer.pdfbox.easytable;
 
 import java.awt.*;
-import java.util.Optional;
 
 public class Cell {
 
@@ -180,8 +179,7 @@ public class Cell {
     }
 
     public Color getBorderColor() {
-        Optional<Color> optBorderColor = Optional.ofNullable(borderColor);
-        return optBorderColor.orElse(getRow().getBorderColor());
+		return borderColor != null ? borderColor : getRow().getBorderColor();
     }
 
     public void setBorderColor(Color borderColor) {

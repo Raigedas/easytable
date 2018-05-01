@@ -3,7 +3,6 @@ package org.vandeseer.pdfbox.easytable;
 import java.awt.*;
 import java.util.LinkedList;
 import java.util.List;
-import java.util.Optional;
 
 public class Row {
 
@@ -32,15 +31,20 @@ public class Row {
     }
 
     float getHeightWithoutFontHeight() {
-        final Optional<Cell> highestCell = cells
-                .stream()
-                .max((cell1, cell2) -> Float.compare(cell1.getHeightWithoutFontSize(), cell2.getHeightWithoutFontSize()));
-        return highestCell.orElseThrow(IllegalStateException::new).getHeightWithoutFontSize();
+        Cell highestCell = null;
+		for (Cell cell : cells) {
+			if (highestCell == null || cell.getHeightWithoutFontSize() > highestCell.getHeightWithoutFontSize()) {
+				highestCell = cell;
+			}
+		}
+		if (highestCell == null) {
+			throw new IllegalStateException();
+		}
+		return highestCell.getHeightWithoutFontSize();
     }
 
     public Color getBorderColor() {
-        Optional<Color> optBorderColor = Optional.ofNullable(borderColor);
-        return optBorderColor.orElse(getTable().getBorderColor());
+        return borderColor != null ? borderColor : getTable().getBorderColor();
     }
 
     private void setBorderColor(Color borderColor) {
@@ -48,9 +52,9 @@ public class Row {
     }
 
     public static class RowBuilder {
-        private final List<Cell> cells = new LinkedList<>();
-        private Optional<Color> backgroundColor = Optional.empty();
-        private Optional<Color> borderColor = Optional.empty();
+        private final List<Cell> cells = new LinkedList<Cell>();
+        private Color backgroundColor = null;
+        private Color borderColor = null;
 
         public RowBuilder add(final Cell cell) {
             cells.add(cell);
@@ -58,23 +62,27 @@ public class Row {
         }
 
         public RowBuilder setBackgroundColor(Color backgroundColor) {
-            this.backgroundColor = Optional.ofNullable(backgroundColor);
+            this.backgroundColor = backgroundColor;
             return this;
         }
 
         public RowBuilder setBorderColor(Color borderColor) {
-            this.borderColor = Optional.of(borderColor);
+            this.borderColor = borderColor;
             return this;
         }
 
         public Row build() {
-            cells.stream().forEach(cell -> {
+			for (Cell cell : cells) {
                 if (!cell.hasBackgroundColor()) {
-                    backgroundColor.ifPresent(cell::setBackgroundColor);
+					if (backgroundColor != null) {
+						cell.setBackgroundColor(backgroundColor);
+					}
                 }
-            });
+            }
             Row row = new Row(cells);
-            borderColor.ifPresent(row::setBorderColor);
+			if (borderColor != null) {
+				row.setBorderColor(borderColor);
+			}
             return row;
         }
     }

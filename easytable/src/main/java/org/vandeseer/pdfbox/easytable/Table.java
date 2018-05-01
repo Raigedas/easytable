@@ -9,8 +9,8 @@ import java.util.List;
 
 public class Table {
 
-    private List<Row> rows = new LinkedList<>();
-    private List<Column> columns = new LinkedList<>();
+    private List<Row> rows = new LinkedList<Row>();
+    private List<Column> columns = new LinkedList<Column>();
     private PDFont font = PDType1Font.HELVETICA;
     private int fontSize = 12;
     private int numberOfColumns = 0;
@@ -93,8 +93,8 @@ public class Table {
 
 
     public static class TableBuilder {
-        private final List<Row> rows = new LinkedList<>();
-        private final List<Column> columns = new LinkedList<>();
+        private final List<Row> rows = new LinkedList<Row>();
+        private final List<Column> columns = new LinkedList<Column>();
         private int numberOfColumns = 0;
         private float width = 0;
         private Table table = new Table(rows, columns);
